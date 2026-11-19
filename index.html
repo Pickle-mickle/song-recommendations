@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Song Recommendations</title>
+  <meta name="description" content="Send a song recommendation." />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- Moving background video. The source is chosen in script.js (mobile vs desktop). -->
+  <video id="bg-video" autoplay muted loop playsinline preload="auto"
+         poster="poster-desktop.jpg" aria-hidden="true"></video>
+  <div class="overlay" aria-hidden="true"></div>
+
+  <main>
+    <section class="card" id="form-view">
+      <p class="eyebrow">Now playing: your suggestions</p>
+      <h1>Song Recommendations</h1>
+      <p class="subtitle">Got a song I should hear? Tell me what it is and who made it.</p>
+
+      <form id="recommend-form" novalidate>
+        <div class="field">
+          <label for="song">Song title</label>
+          <input id="song" name="song" type="text" required maxlength="150"
+                 placeholder="e.g. Midnight City" autocomplete="off" />
+        </div>
+
+        <div class="field">
+          <label for="artist">Artist</label>
+          <input id="artist" name="artist" type="text" required maxlength="150"
+                 placeholder="e.g. M83" autocomplete="off" />
+        </div>
+
+        <!-- Hidden spam trap: people never see this, bots fill it in. -->
+        <div class="honeypot" aria-hidden="true">
+          <label for="website">Website</label>
+          <input id="website" name="website" type="text" tabindex="-1" autocomplete="off" />
+        </div>
+
+        <input type="hidden" name="returnUrl" id="return-url" />
+
+        <p class="error" id="form-error" role="alert"></p>
+
+        <button type="submit" id="submit-btn"><span>Send Recommendation</span></button>
+      </form>
+    </section>
+
+    <section class="card thanks" id="thanks-view" hidden>
+      <div class="check" aria-hidden="true">&#10003;</div>
+      <h1>Thanks for the recommendation!</h1>
+      <p class="subtitle">It's on the list. I'll give it a listen.</p>
+      <button type="button" id="another-btn" class="secondary">Send another song</button>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
