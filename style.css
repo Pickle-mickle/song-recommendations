@@ -1,0 +1,234 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+}
+
+body {
+  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  color: #fff;
+  background: #05060a;
+  min-height: 100vh;
+  min-height: 100dvh;
+  overflow-x: hidden;
+}
+
+/* Full-screen background image. Mobile/desktop chosen by the media query below. */
+.bg-image {
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  background-color: #05060a;
+  background-image: url('desktop-bg.jpg');
+  /* The whole image fits the window exactly: all four edges line up with the
+     browser edges, with no cropping or zooming. */
+  background-size: 100% 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+@media (max-width: 767px) {
+  .bg-image {
+    background-image: url('mobile-bg.jpg');
+  }
+}
+
+/* Very light shading so the text stays readable over the image */
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(120% 90% at 50% 60%, rgba(0, 0, 0, 0.04) 0%, rgba(0, 0, 0, 0.4) 80%),
+    linear-gradient(180deg, rgba(0, 0, 0, 0.14), rgba(0, 0, 0, 0.42));
+}
+
+main {
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+}
+
+/* No panel, blur or shadow — the form sits directly on the background image */
+.card {
+  width: min(100%, 440px);
+  padding: clamp(20px, 4vw, 32px);
+  border-radius: 20px;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  text-align: center;
+  transform: translateY(15vh);
+  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.95), 0 1px 4px rgba(0, 0, 0, 0.9);
+}
+
+.eyebrow {
+  margin: 0 0 14px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+h1 {
+  margin: 0;
+  font-size: clamp(1.9rem, 6vw, 2.5rem);
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+}
+
+.title-heading {
+  margin: 0;
+}
+
+.title-image {
+  display: block;
+  width: min(100%, 380px);
+  height: auto;
+  margin: 0 auto;
+  filter: drop-shadow(0 2px 12px rgba(0, 0, 0, 0.85));
+}
+
+.subtitle {
+  margin: 14px 0 0;
+  color: rgba(255, 255, 255, 0.76);
+  line-height: 1.55;
+  font-size: 0.98rem;
+}
+
+form {
+  margin-top: 30px;
+  text-align: left;
+}
+
+.field + .field {
+  margin-top: 16px;
+}
+
+label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+input[type="text"] {
+  width: 100%;
+  padding: 14px 16px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.38);
+  background: rgba(0, 0, 0, 0.3);
+  color: #fff;
+  font: inherit;
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+}
+
+input[type="text"]::placeholder {
+  color: rgba(255, 255, 255, 0.42);
+}
+
+input[type="text"]:focus {
+  border-color: #ff9aae;
+  background: rgba(0, 0, 0, 0.42);
+  box-shadow: 0 0 0 3px rgba(255, 122, 144, 0.3);
+}
+
+.honeypot {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.error {
+  min-height: 1.3em;
+  margin: 14px 0 0;
+  color: #ffc4ce;
+  font-size: 0.875rem;
+}
+
+.counter {
+  margin: 12px 0 0;
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+button {
+  width: 100%;
+  margin-top: 16px;
+  padding: 15px 20px;
+  border: 0;
+  border-radius: 12px;
+  font: inherit;
+  font-weight: 700;
+  color: #230f16;
+  background: linear-gradient(135deg, #ff9aae, #ffc46b);
+  cursor: pointer;
+  transition: transform 0.15s, filter 0.15s;
+}
+
+button:hover {
+  filter: brightness(1.06);
+  transform: translateY(-1px);
+}
+
+button:active {
+  transform: translateY(0);
+}
+
+button:disabled {
+  opacity: 0.7;
+  cursor: wait;
+}
+
+button.secondary {
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+}
+
+.thanks .check {
+  width: 62px;
+  height: 62px;
+  margin: 0 auto 22px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  font-size: 1.8rem;
+  color: #230f16;
+  background: linear-gradient(135deg, #ff9aae, #ffc46b);
+}
+
+[hidden] {
+  display: none !important;
+}
+
+@media (max-width: 480px) {
+  main {
+    padding: 16px;
+  }
+
+  .card {
+    transform: translateY(9vh);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+  }
+}
