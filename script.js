@@ -1,50 +1,82 @@
 // ---------------------------------------------------------------------------
-// ONE SETUP STEP: paste your Google Apps Script web app URL between the quotes.
-// (See README.md — step 3. Or just paste the URL to me and I'll do it.)
+// Google Apps Script web app URL (already filled in during setup).
 // ---------------------------------------------------------------------------
 const FORM_ENDPOINT = 'https://script.google.com/macros/s/AKfycbxBp9q51Scv-oNt71rxARiBFmjE7rZDSSQPQqtgBJDnXVQI7fkKCsFYtw46pKKMXKOWPg/exec';
 
-// --- Background video: only the right file is downloaded -------------------
-const video = document.getElementById('bg-video');
-const isMobileScreen = window.matchMedia('(max-width: 767px)').matches;
-video.poster = isMobileScreen ? 'poster-mobile.jpg' : 'poster-desktop.jpg';
-video.src = isMobileScreen ? 'mobile.mp4' : 'desktop.mp4';
-video.load();
+// A soft limit: 3 songs per browser. Clearing browsing data or using incognito
+// starts a fresh count — that's fine, it's meant to be an honour-system limit.
+const SUBMISSION_LIMIT = 3;
+const STORAGE_KEY = 'songRecommendationsSubmitted';
 
-function playBackground() {
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    video.pause();
-    return;
-  }
-  // Muted + inline autoplay is allowed by browsers; catch any rare refusal.
-  video.play().catch(() => {});
-}
-playBackground();
+// --- Background ------------------------------------------------------------
+// The background image is chosen in style.css by a media query, so no code
+// is needed here. Only one image downloads on any given device.
 
-// --- Form elements ----------------------------------------------------------
+// --- Elements ---------------------------------------------------------------
 const form = document.getElementById('recommend-form');
 const formView = document.getElementById('form-view');
 const thanksView = document.getElementById('thanks-view');
+const doneView = document.getElementById('done-view');
 const errorEl = document.getElementById('form-error');
+const counterEl = document.getElementById('counter');
 const submitBtn = document.getElementById('submit-btn');
 const returnUrlField = document.getElementById('return-url');
 const songField = document.getElementById('song');
 const artistField = document.getElementById('artist');
 
-// Where the Google script should send people after a successful submission.
 returnUrlField.value = window.location.origin + window.location.pathname;
 
-// --- Show the thank-you view when we return from the form service -----------
-if (new URLSearchParams(window.location.search).get('thanks') === '1') {
-  formView.hidden = true;
-  thanksView.hidden = false;
-  // Clean the address bar without reloading the page.
+// --- Submission counter -----------------------------------------------------
+function getCount() {
+  try {
+    const value = parseInt(localStorage.getItem(STORAGE_KEY) || '0', 10);
+    return Number.isFinite(value) && value > 0 ? value : 0;
+  } catch (err) {
+    return 0;
+  }
+}
+
+function setCount(value) {
+  try {
+    localStorage.setItem(STORAGE_KEY, String(value));
+  } catch (err) {
+    // Browsers with storage disabled simply get no counter.
+  }
+}
+
+function updateCounter() {
+  const used = getCount();
+  const left = Math.max(0, SUBMISSION_LIMIT - used);
+  counterEl.textContent = left > 0
+    ? `${used} of ${SUBMISSION_LIMIT} used — ${left} left`
+    : `${SUBMISSION_LIMIT} of ${SUBMISSION_LIMIT} used`;
+}
+
+function showOnly(view) {
+  formView.hidden = view !== formView;
+  thanksView.hidden = view !== thanksView;
+  doneView.hidden = view !== doneView;
+}
+
+updateCounter();
+
+const justSubmitted = new URLSearchParams(window.location.search).get('thanks') === '1';
+if (justSubmitted) {
   window.history.replaceState({}, '', window.location.pathname);
 }
 
+if (getCount() >= SUBMISSION_LIMIT) {
+  showOnly(doneView);
+} else if (justSubmitted) {
+  showOnly(thanksView);
+}
+
 document.getElementById('another-btn').addEventListener('click', () => {
-  thanksView.hidden = true;
-  formView.hidden = false;
+  if (getCount() >= SUBMISSION_LIMIT) {
+    showOnly(doneView);
+    return;
+  }
+  showOnly(formView);
   songField.focus();
 });
 
@@ -66,6 +98,15 @@ form.addEventListener('submit', (event) => {
     errorEl.textContent = 'Setup is not finished yet — the form endpoint needs to be added.';
     return;
   }
+
+  const used = getCount();
+  if (used >= SUBMISSION_LIMIT) {
+    showOnly(doneView);
+    return;
+  }
+
+  setCount(used + 1);
+  updateCounter();
 
   form.action = FORM_ENDPOINT;
   form.method = 'POST';

@@ -20,25 +20,32 @@ body {
   overflow-x: hidden;
 }
 
-/* Full-screen moving background */
-#bg-video {
+/* Full-screen background image. Mobile/desktop chosen by the media query below. */
+.bg-image {
   position: fixed;
   inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
   z-index: -2;
-  background: #05060a;
+  background-color: #05060a;
+  background-image: url('desktop-bg.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
-/* Darkens the video slightly so the form stays readable */
+@media (max-width: 767px) {
+  .bg-image {
+    background-image: url('mobile-bg.jpg');
+  }
+}
+
+/* Very light shading so the text stays readable over the image */
 .overlay {
   position: fixed;
   inset: 0;
   z-index: -1;
   background:
-    radial-gradient(120% 90% at 50% 40%, rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0.55) 75%),
-    linear-gradient(180deg, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.62));
+    radial-gradient(120% 90% at 50% 60%, rgba(0, 0, 0, 0.04) 0%, rgba(0, 0, 0, 0.4) 80%),
+    linear-gradient(180deg, rgba(0, 0, 0, 0.14), rgba(0, 0, 0, 0.42));
 }
 
 main {
@@ -49,16 +56,17 @@ main {
   padding: 24px;
 }
 
+/* No panel, blur or shadow — the form sits directly on the background image */
 .card {
   width: min(100%, 440px);
-  padding: clamp(28px, 5vw, 44px);
-  border-radius: 24px;
-  background: rgba(10, 12, 18, 0.6);
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(18px) saturate(140%);
-  -webkit-backdrop-filter: blur(18px) saturate(140%);
+  padding: clamp(20px, 4vw, 32px);
+  border-radius: 20px;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
   text-align: center;
+  transform: translateY(15vh);
+  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.95), 0 1px 4px rgba(0, 0, 0, 0.9);
 }
 
 .eyebrow {
@@ -75,6 +83,18 @@ h1 {
   font-size: clamp(1.9rem, 6vw, 2.5rem);
   line-height: 1.12;
   letter-spacing: -0.02em;
+}
+
+.title-heading {
+  margin: 0;
+}
+
+.title-image {
+  display: block;
+  width: min(100%, 380px);
+  height: auto;
+  margin: 0 auto;
+  filter: drop-shadow(0 2px 12px rgba(0, 0, 0, 0.85));
 }
 
 .subtitle {
@@ -105,8 +125,8 @@ input[type="text"] {
   width: 100%;
   padding: 14px 16px;
   border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.22);
-  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.38);
+  background: rgba(0, 0, 0, 0.3);
   color: #fff;
   font: inherit;
   font-size: 1rem;
@@ -120,8 +140,8 @@ input[type="text"]::placeholder {
 
 input[type="text"]:focus {
   border-color: #ff9aae;
-  background: rgba(255, 255, 255, 0.12);
-  box-shadow: 0 0 0 4px rgba(255, 122, 144, 0.2);
+  background: rgba(0, 0, 0, 0.42);
+  box-shadow: 0 0 0 3px rgba(255, 122, 144, 0.3);
 }
 
 .honeypot {
@@ -137,6 +157,12 @@ input[type="text"]:focus {
   margin: 14px 0 0;
   color: #ffc4ce;
   font-size: 0.875rem;
+}
+
+.counter {
+  margin: 12px 0 0;
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.8);
 }
 
 button {
@@ -195,7 +221,7 @@ button.secondary {
   }
 
   .card {
-    border-radius: 20px;
+    transform: translateY(9vh);
   }
 }
 
